@@ -10,3 +10,16 @@ pod管理
 .. note::
 
     用于重启某个 deployment 的 pod
+
+数据还原
+===========
+
+.. note::
+
+    目前都是手动还原，后续接入平台，自动还原，并保存每次还原的日志信息
+
+-   还原dgraph
+-   还原pg
+-   还原cassandra
+-   还原redis
+-   还原ignite
