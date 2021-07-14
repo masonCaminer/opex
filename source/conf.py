@@ -20,7 +20,7 @@ source_parsers = {
 
 # -- Project information -----------------------------------------------------
 
-project = 'treelab-devops'
+project = 'opex'
 copyright = '2021, mason'
 author = 'mason'
 
