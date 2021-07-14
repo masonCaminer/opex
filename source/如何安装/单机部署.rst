@@ -1,0 +1,110 @@
+.. _topics-单机部署:
+
+========
+单机部署
+========
+
+环境准备
+========
+| 基础环境
+
+    - python 3.9
+    - redis 6.2.4
+    - mysql 8.0.11
+    - rabbitmq 3.8.0
+    - node.js v12.20.2
+
+|  安装db
+
+.. note::
+
+    具体看项目根目录下的 ``docker-compose-db.yml``
+
+
+前端服务
+========
+|   启动命令
+
+
+.. code-block:: shell
+
+
+    npm install --ignore-script # 安装
+    npm run build # 构建
+    npm start # 启动
+
+|   地址
+
+
+.. code-block:: shell
+
+
+    http://0.0.0.0:8080/
+
+|   环境变量配置
+
+    ``.env``  文件
+
+.. code-block:: shell
+
+    VUE_APP_BASE_URL = http://0.0.0.0:8001/
+    NODE_ENV = production
+    VUE_APP_DOMAIN_NAME = 0.0.0.0:7777
+
+网关服务
+========
+|   启动命令
+
+
+.. code-block:: shell
+
+
+    python start.py
+
+|   地址
+
+.. code-block:: shell
+
+
+    http://0.0.0.0:8001/
+
+|     修改配置
+
+``settings.py`` 包含所有的配置项，
+``cfg.ini`` 用于选配配置项，``[env]`` 通过填写 ``local`` ，``develop`` ，``production`` 来选择不同的环境。
+具体说明可以看 ``settings.py``  上的注释
+
+
+后端服务
+========
+|   启动命令
+
+
+.. code-block:: shell
+
+
+    python startup.py #启动主服务
+
+    python startup.py --service=gw_log # 记录用户除了查询的所有操作日志
+
+    python startup.py --service=exec_task # 消费产生的job
+
+    python startup.py --service=other --port=7777 # 订阅形式查看job日志
+
+|   地址
+
+.. code-block:: shell
+
+
+    http://0.0.0.0:8000/
+
+|     修改配置
+
+
+``settings.py`` 包含所有的配置项，
+``cfg.ini`` 用于选配配置项，``[env]`` 通过填写 ``local`` ，``develop`` ，``production`` 来选择不同的环境，``local`` 为本地搭建db，``develop`` 使用服务器上的db，``production`` 为正式服务.
+具体说明可以看``settings.py`` 上的注释
+
+.. note::
+
+    在 ``api-end`` 目录下

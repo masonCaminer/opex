@@ -1,0 +1,88 @@
+.. _topics-容器部署:
+
+========
+容器部署
+========
+
+环境准备
+========
+|  安装db
+
+.. note::
+
+    具体看项目根目录下的 ``docker-compose-db.yml``
+
+前端服务
+========
+|   Dockerfile
+
+
+..  code-block:: yaml
+
+    FROM registry.cn-zhangjiakou.aliyuncs.com/caminer/node:12.20.1-slim
+    EXPOSE 8090
+    # 设置编码
+    ENV LANG en_US.UTF-8
+    # 同步时间
+    ENV TZ=Asia/Shanghai
+    RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+    WORKDIR /app
+    RUN mkdir -p /app
+    ADD . /app
+    RUN  npm config set registry https://registry.npmjs.org/ && npm install --ignore-script && npm run build
+    #CMD ["npm", "start"]
+
+网关服务
+========
+|   Dockerfile
+
+
+.. code-block:: yaml
+
+
+    FROM python:3.9.5-slim
+    EXPOSE 8001
+    WORKDIR /usr/src
+    COPY . .
+    ENV LANG en_US.UTF-8
+    ENV TZ=Asia/Shanghai
+    RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+    #RUN sed -i "s@http://deb.debian.org@http://mirrors.aliyun.com@g" /etc/apt/sources.list &&  rm -Rf /var/lib/apt/lists/*
+
+    #RUN apt-get update && apt-get install -y  iputils-ping git vim
+    RUN pip install  -i https://mirrors.aliyun.com/pypi/simple/ -r requirements.txt
+    CMD ["python","start.py"]
+
+
+后端服务
+========
+|   Dockerfile
+
+
+.. code-block:: yaml
+
+
+    FROM python:3.9.5-slim
+    EXPOSE 8000
+    WORKDIR /usr/src
+    COPY .. .
+    ENV LANG en_US.UTF-8
+    ENV TZ=Asia/Shanghai
+    RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+    RUN sed -i "s@http://deb.debian.org@http://mirrors.aliyun.com@g" /etc/apt/sources.list &&  rm -Rf /var/lib/apt/lists/*
+
+    RUN apt-get update && apt-get install -y  iputils-ping git && chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl && chmod 777 *
+    RUN pip install  -i https://mirrors.aliyun.com/pypi/simple/ -r requirements.txt
+    RUN pip install -i https://mirrors.aliyun.com/pypi/simple/ -U git+https://gitee.com/myll_758/ops_sdk.git
+
+
+启动
+========
+|   docker-compose.yaml
+
+
+.. note::
+
+    具体看项目根目录下的 ``docker-compose.yml``
