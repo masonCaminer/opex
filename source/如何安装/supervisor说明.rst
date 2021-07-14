@@ -13,4 +13,4 @@ supervisor说明
 .. code-block:: shell
 
     supervisord -c supervisor_local.conf //本地
-    supervisord -c supervisor_local.conf //生产
+    supervisord -c supervisor.conf //生产
